@@ -1,0 +1,22 @@
+[Unit]
+Description="Minio S3 Storage"
+Documentation=https://minio.io
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+Environment=DATA=/opt/minio-data
+Environment=IMAGE=docker.io/minio/minio
+Environment=HOST_INT=127.0.0.1
+Environment=TAG=RELEASE.2020-04-15T19-42-18Z
+ExecStartPre=/bin/mkdir -p ${DATA}
+ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
+ExecStart=/usr/bin/podman run   --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid    -v ${DATA}:/data  -p 9000:9000  ${IMAGE}:${TAG} server /data 
+ExecStop=/usr/bin/sh -c "/usr/bin/podman rm -f `cat /%t/%n-cid`"
+KillMode=none
+Type=simple
+PIDFile=/%t/%n-pid
+
+[Install]
+WantedBy=multi-user.target
