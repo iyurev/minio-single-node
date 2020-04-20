@@ -12,7 +12,7 @@ Environment=HOST_INT=127.0.0.1
 Environment=TAG=RELEASE.2020-04-15T19-42-18Z
 ExecStartPre=/bin/mkdir -p ${DATA}
 ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
-ExecStart=/usr/bin/podman run -d --name minio    --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid   --log-driver=journald  -v ${DATA}:/data  -p 9000:9000  ${IMAGE}:${TAG} server /data 
+ExecStart=/usr/bin/podman run -d   --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid   --log-driver=journald  -v ${DATA}:/data  -p 9000:9000  ${IMAGE}:${TAG} server /data 
 ExecStop=/usr/bin/sh -c "/usr/bin/podman rm -f `cat /%t/%n-cid`"
 KillMode=none
 Type=forking
